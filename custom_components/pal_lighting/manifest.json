@@ -1,7 +1,7 @@
 {
   "domain": "pal_lighting",
   "name": "PAL Lighting",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "documentation": "https://github.com/vik-pfqld/pal-lighting-hacs",
   "issue_tracker": "https://github.com/vik-pfqld/pal-lighting-hacs/issues",
   "codeowners": ["@vik-pfqld"],

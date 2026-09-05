@@ -5,6 +5,9 @@ DOMAIN = "pal_lighting"
 CONF_HOST = "host"
 CONF_ACCESS_KEY = "access_key"
 CONF_PASSWORD = "password"  # decimal 0-255, applied to both frame pwd bytes
+CONF_POLL_INTERVAL = "poll_interval"  # seconds; 0 disables the reachability probe
+
+DEFAULT_POLL_INTERVAL = 20
 
 DEFAULT_NAME = "PAL Lighting"
 DEFAULT_ACCESS_KEY = 123456789  # factory accessKey

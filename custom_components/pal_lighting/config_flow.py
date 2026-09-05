@@ -14,9 +14,11 @@ from .const import (
     CONF_ACCESS_KEY,
     CONF_HOST,
     CONF_PASSWORD,
+    CONF_POLL_INTERVAL,
     DEFAULT_ACCESS_KEY,
     DEFAULT_NAME,
     DEFAULT_PASSWORD,
+    DEFAULT_POLL_INTERVAL,
     DOMAIN,
 )
 from .protocol import PalProtocolError, async_probe_device
@@ -29,6 +31,9 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         ),
         vol.Optional(CONF_PASSWORD, default=DEFAULT_PASSWORD): vol.All(
             vol.Coerce(int), vol.Range(min=0, max=255)
+        ),
+        vol.Optional(CONF_POLL_INTERVAL, default=DEFAULT_POLL_INTERVAL): vol.All(
+            vol.Coerce(int), vol.Range(min=0, max=3600)
         ),
     }
 )
@@ -101,6 +106,10 @@ class PalLightingOptionsFlow(config_entries.OptionsFlow):
                     CONF_PASSWORD,
                     default=current.get(CONF_PASSWORD, DEFAULT_PASSWORD),
                 ): vol.All(vol.Coerce(int), vol.Range(min=0, max=255)),
+                vol.Optional(
+                    CONF_POLL_INTERVAL,
+                    default=current.get(CONF_POLL_INTERVAL, DEFAULT_POLL_INTERVAL),
+                ): vol.All(vol.Coerce(int), vol.Range(min=0, max=3600)),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)

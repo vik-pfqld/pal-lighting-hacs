@@ -16,7 +16,13 @@ no internet, fully local**.
   remote. Rename them freely in HA (e.g. Switch 2 → "Spa pump").
 - Entities are **optimistic** (assumed state): the device reports no readable
   switch state — the official app behaves exactly the same way, remembering
-  only what it last sent.
+  only what it last sent. The last commanded state **survives HA restarts**
+  (restore state), so a switch that was on before a restart comes back as on.
+- **Reachability tracking**: a background probe (handshake + probe, default
+  every 20 s; configurable at setup, 0 disables) marks the switches
+  `unavailable` when the controller stops answering and restores them when it
+  answers again. A toggle while the device is down raises an error — it never
+  silently pretends to succeed.
 - Device registry entry with the MAC, MCU firmware version and model
   discovered during setup validation.
 

@@ -14,23 +14,25 @@ which also just remembers what it last sent.
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady, HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import (
     CONF_ACCESS_KEY,
     CONF_HOST,
     CONF_PASSWORD,
+    CONF_POLL_INTERVAL,
     DEFAULT_ACCESS_KEY,
     DEFAULT_NAME,
     DEFAULT_PASSWORD,
+    DEFAULT_POLL_INTERVAL,
     DOMAIN,
 )
-from .protocol import PalProtocolError, async_probe_device, async_set_switch
+from .coordinator import PalCoordinator
+from .protocol import PalProtocolError, async_set_switch
 
 PLATFORMS = ["switch"]
 
@@ -39,18 +41,17 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up PAL Lighting from a config entry."""
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = entry
+    coordinator = PalCoordinator(
+        hass,
+        entry.data[CONF_HOST],
+        entry.data.get(CONF_ACCESS_KEY, DEFAULT_ACCESS_KEY),
+        entry.data.get(CONF_POLL_INTERVAL, DEFAULT_POLL_INTERVAL),
+    )
+    # First refresh validates connectivity (raises ConfigEntryNotReady if the
+    # controller doesn't answer) and primes entity availability.
+    await coordinator.async_config_entry_first_refresh()
 
-    # Validate connectivity now so setup failures surface in the UI instead of
-    # as silent dead switches later.
-    try:
-        await async_probe_device(
-            entry.data[CONF_HOST],
-            entry.data.get(CONF_ACCESS_KEY, DEFAULT_ACCESS_KEY),
-        )
-    except (PalProtocolError, OSError) as exc:
-        raise ConfigEntryNotReady(f"cannot reach PAL controller: {exc}") from exc
-
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 

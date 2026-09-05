@@ -6,7 +6,8 @@
         "data": {
           "host": "Device IP address",
           "access_key": "Access key (factory default 123456789)",
-          "password": "Password byte (decimal, default 117 = 0x75)"
+          "password": "Password byte (decimal, default 117 = 0x75)",
+          "poll_interval": "Reachability poll interval in seconds (0 disables; switches then never show unavailable)"
         }
       }
     },
@@ -22,7 +23,8 @@
       "init": {
         "data": {
           "access_key": "Access key",
-          "password": "Password byte (decimal)"
+          "password": "Password byte (decimal)",
+          "poll_interval": "Reachability poll interval in seconds (0 = disabled)"
         }
       }
     }
