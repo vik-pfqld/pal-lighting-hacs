@@ -1,0 +1,11 @@
+{
+  "domain": "pal_lighting",
+  "name": "PAL Lighting",
+  "version": "0.1.0",
+  "documentation": "https://github.com/vik-pfqld/pal-lighting-hacs",
+  "issue_tracker": "https://github.com/vik-pfqld/pal-lighting-hacs/issues",
+  "codeowners": ["@vik-pfqld"],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "license": "MIT"
+}

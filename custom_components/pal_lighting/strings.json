@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Set up a PAL Lighting 4-switch controller. It is controlled fully locally over UDP — no cloud account needed.\n{host_hint}",
+        "data": {
+          "host": "Device IP address",
+          "access_key": "Access key (factory default 123456789)",
+          "password": "Password byte (decimal, default 117 = 0x75)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect: check the IP address and that the device is powered and on the network."
+    },
+    "abort": {
+      "already_configured": "This PAL controller is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "access_key": "Access key",
+          "password": "Password byte (decimal)"
+        }
+      }
+    }
+  }
+}
