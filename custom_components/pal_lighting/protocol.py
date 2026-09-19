@@ -272,8 +272,21 @@ class _XlinkSocket:
         """0xA3 status query — part of the app's proven connect sequence."""
         await self._pipe(session_id, status_query_frame())
 
-    async def send_control(self, session_id: int, frame: bytes) -> None:
-        await self._pipe(session_id, frame)
+    async def send_control(self, session_id: int, frame: bytes) -> bytes:
+        # Success = a pipe reply arrived at all. The ACK body's code byte is
+        # NOT a success indicator: working app commands return code 0 (see the
+        # module docstring, and the live acks observed from 2026-09-14 onward,
+        # e.g. c3ba00 / cd4c00 — all code 0). _recv_until already raises
+        # PalProtocolError if no reply arrives within the timeout, which is the
+        # only real failure mode. The mandatory probe step (run before every
+        # control frame in async_set_switch) is what makes an ACKed command
+        # actually execute on the MCU — not the ack code.
+        #
+        # We previously rejected body[2] != 0x01 here. That was wrong: the
+        # device returns 0x00 for accepted commands, so the check raised on
+        # every valid command from 2026-09-14, desyncing optimistic state and
+        # aborting automations (e.g. Flush Spa jets) before their turn_off.
+        return await self._pipe(session_id, frame)
 
 
 # ───────────────────────── high-level API ─────────────────────────

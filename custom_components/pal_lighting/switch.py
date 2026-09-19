@@ -74,11 +74,19 @@ class PalSwitch(CoordinatorEntity, RestoreEntity, SwitchEntity):
             self._attr_is_on = last_state.state == "on"
 
     async def async_turn_on(self, **kwargs) -> None:
+        # The relay is a TOGGLE — every accepted command flips it, so a
+        # redundant command would invert the load (verified live 2026-09-13:
+        # a second turn_off turned the bubbles back on). Skip when the
+        # tracked state already matches; unknown (None) still sends.
+        if self._attr_is_on:
+            return
         await pal_set_switch(self.coordinator.hass, self._entry, self._index, True)
         self._attr_is_on = True
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs) -> None:
+        if self._attr_is_on is False:
+            return
         await pal_set_switch(self.coordinator.hass, self._entry, self._index, False)
         self._attr_is_on = False
         self.async_write_ha_state()
