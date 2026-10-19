@@ -1,4 +1,15 @@
+<div align="center">
+
+<img src="custom_components/pal_lighting/brand/logo.png" alt="PAL Lighting logo" width="220">
+
 # PAL Lighting HACS integration for Home Assistant
+
+[![HACS](https://img.shields.io/badge/HACS-Custom%20Integration-41BDF5?logo=homeassistant&logoColor=white)](https://www.hacs.xyz/)
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2025.1%2B-blue?logo=homeassistant)](https://www.home-assistant.io/)
+
+</div>
+
+---
 
 Custom Home Assistant integration for **PAL Lighting** 4-switch WiFi
 controllers (`com.irainxun.pallight`, the XLink/Aiyunxun white-label platform).
